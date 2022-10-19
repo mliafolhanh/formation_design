@@ -1,5 +1,6 @@
 from ast import For
 from ctypes import sizeof
+from shutil import ExecError
 from typing import Tuple
 from xmlrpc.client import Boolean
 import Constant
@@ -12,6 +13,35 @@ class Formation:
         """
         self.matrix = matrix
 
+    def encrypt(self) -> int:
+        """
+            Encrypt a formation into number with 4 base(0->0, F->1, I->2, L->3)
+        """
+        value = 0
+        for dx in range(Constant.MaxW):
+            for dy in range(Constant.MaxH):
+                value = value * 4 + Constant.SkillMapToInt[self.matrix[dx][dy]]
+        return value       
+
+    def decrypt(value):
+        matrix = [[0 for i in range(Constant.MaxH)] for j in range(Constant.MaxW)]
+        for dx in range(Constant.MaxW - 1, -1, -1):
+            for dy in range(Constant.MaxH - 1, -1, -1):
+                matrix[dx][dy] = Constant.IntMapToSkill[value % 4]
+                value = value // 4
+        return Formation(matrix)
+
+    def __str__(self) -> str:
+        result = ""
+        for dx in range(Constant.MaxW):
+            for dy in range(Constant.MaxH):
+                if self.matrix[dx][dy] != 0:
+                    result += self.matrix[dx][dy]
+                else :
+                    result += "0"
+            result += "\n"
+        return result
+
 class Solution:
     def __init__(self, formations):
         """
@@ -22,6 +52,11 @@ class Solution:
     def __len__(self) -> int:
         return len(self.formations)
 
+    def __repr__(self) -> str:
+        result = "Solution: \n"
+        for formation in self.formations:
+            result += "\n{}".format(formation)
+        return result
     
 class Validation:
     def check(self, solution: Solution) -> Tuple:
@@ -41,11 +76,17 @@ class Validation:
         return (maxResult, maxResult <= Constant.MaxCommon, violatePairs)
 
     def checkInput(self, formation: Formation):
+        if len(formation.matrix) != Constant.MaxW:
+            raise Exception("Formation has wrong width")
         for i in range(Constant.MaxW):
+            if len(formation.matrix[i]) != Constant.MaxH:
+                raise Exception("Formation has wrong height")
             for j in range(Constant.MaxH):
                 if not (formation.matrix[i][j] in Constant.SkillCharacters):
                     raise Exception("The character " + formation.matrix[i][j] + " is not in the list " + Constant.SkillCharacters) 
 
+    def validateTwoFormation(self, firstFormation: Formation, secondFormation: Formation) -> int:
+        return self.calculateMaxCommonBetweenTwo(firstFormation, secondFormation) <= Constant.MaxCommon
 
     def calculateMaxCommonBetweenTwo(self, firstFormation: Formation, secondFormation: Formation) -> int:
 
