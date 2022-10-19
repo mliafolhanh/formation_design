@@ -1,6 +1,9 @@
 # formation_design
 For checking and generate formations
 
+## Requirement
+- Python 3
+
 ## Notation of skill
 - L: ligtening
 - F: fire
