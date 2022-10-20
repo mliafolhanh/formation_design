@@ -14,6 +14,12 @@ class Tool:
         """
         self.candidates = {0: [], 1: [], 2: [], 3: [], 4: [], 5: []}
         self.initPoolCandidate()
+        print(len(self.candidates[0]))
+        print(len(self.candidates[1]))
+        print(len(self.candidates[2]))
+        print(len(self.candidates[3]))
+        print(len(self.candidates[4]))
+        print(len(self.candidates[5]))
 
     def append(self, type: int, value: int):
         self.candidates[type].append(value)
@@ -39,7 +45,7 @@ class Tool:
         
         # whether number character different from 0 is more than 0
         numberCellsNotZero = Constant.MaxW * Constant.MaxH - numberApp.get(0, 0)
-        if numberCellsNotZero > 4 or numberCellsNotZero < 3:
+        if numberCellsNotZero != 4:
             return -1
 
         keys = numberApp.keys()
@@ -48,17 +54,16 @@ class Tool:
         if len(keys) > 3:
                 return -1
 
-        # if 3 then should have 1 key
-        if numberCellsNotZero == 3:
-            if len(keys) != 2:
-                return -1
+        # # if 3 then should have 1 key
+        # if numberCellsNotZero == 3:
+        #     if len(keys) != 2:
+        #         return -1
 
         # if 4 then should have 2 key
         if numberCellsNotZero == 4:
-            if len(keys) != 3:
-                return -1          
-            if numberApp[mainKeys[0]] != numberApp[mainKeys[1]]:
-                return -1
+            if len(keys) == 3:       
+                if numberApp[mainKeys[0]] != numberApp[mainKeys[1]]:
+                    return -1
         return self.getType(mainKeys)
 
     def getMainKeys(self, keys) :
@@ -105,9 +110,7 @@ class Tool:
     
 tool = Tool()
 listOfSolution = []
-formation1 = CheckSolution.Formation([[0, 0, 0], [0, 0, 0], ["F", "F", "F"]])
-currentResult = [formation1.encrypt()]
-tool.recursive(1, listOfSolution, currentResult, 1)
+tool.recursive(1, listOfSolution, [], 0)
 for solution in listOfSolution: 
     print(solution)
 
