@@ -92,7 +92,6 @@ class Tool:
         if currentType >= Constant.NumberOfFormations:
             formations = [CheckSolution.Formation.decrypt(value) for value in currentResult]
             listOfSolution.append(CheckSolution.Solution(formations))
-            print(currentResult)
             return 
         for candidate in self.candidates[currentType]: 
             if self.checkACandiateForType(currentResult, candidate):
@@ -110,7 +109,9 @@ class Tool:
     
 tool = Tool()
 listOfSolution = []
-tool.recursive(1, listOfSolution, [], 0)
+formation1 = CheckSolution.Formation([["F", 0, 0], [0, "F", 0], [ 0, "F", "F"]])
+formation2 = CheckSolution.Formation([[0, 0, "I"], [0, 0, "I"], [0, "I", "I"]])
+tool.recursive(10, listOfSolution, [formation1.encrypt(), formation2.encrypt()], 2)
 for solution in listOfSolution: 
     print(solution)
 
